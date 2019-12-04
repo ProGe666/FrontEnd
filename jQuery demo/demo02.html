@@ -1,0 +1,93 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+	<title>Demo02</title>
+	<!--CDN: content deliver network-->
+	<script type="text/javascript" src="./js/jquery-3.3.1.js"></script>
+	<!--min file : minified file-->
+	<link rel="stylesheet" type="text/css" href="./CSS/bootstrap.min.css">
+	<style type="text/css">
+	.container{
+		width:100%;
+		height:350px;
+		border:2px dashed black;
+	}
+	.outer{
+		width: 300px;
+		height:300px;
+		border: 2px solid red 
+
+	}
+	</style>
+
+	<script type= "text/javascript">
+	var PHASE={
+		0:'Not Started',
+		1:'Capturing',
+		2:'Target',
+		3:'Bubbling'
+	};
+	function displayPhase(event){
+		console.log('--------', event.currentTarget.id,'-----------');
+		console.log('Target:',event.target.id);
+		console.log('Event Phase:',PHASE[event.eventPhase]);
+	}
+		$(document).ready(function ready(){
+			$('.inner').click(function onclick(){
+				//console.log('clicked',event);
+				displayPhase(event);
+				/*stopPropagation/stopImmediatePropagation will stop the event propagation from moving to next phase.while SIP will stop all remaining listeners of the same type registered on this element*/
+				//event.stopImmediatePropagation();				
+				event.stopPropagation();
+			});
+			$('.outer').on('click',function onClick(event){
+			displayPhase(event);
+			//console.log('outer clicked',event.eventPhase);
+		});
+		var inner =document.querySelector('#inner'),
+			outer =document.querySelector('#outer');
+
+		inner.addEventListener('click', function onClick(event){
+			//console.log(event.eventPhase);
+			displayPhase(event);
+		});
+		outer.addEventListener('click',function onClick(event){
+		//console.log(event.eventPhase)
+		displayPhase(event);
+		},true/*useCapture: whether triggers in capturing phase */);
+		$('#submit').click(function onClick(event){
+			event.preventDefault(event);
+		})
+		});
+	</script>
+</head>
+<body>
+
+	<div class='container'>
+	<div class="outer" id = "outer">
+		<button 
+		id="inner"
+		class="inner btn btn-outline-primary">
+		Click Me
+		</button>
+
+		<button>
+			<label>Click</label>
+			<div>
+				<p>shape</p>
+				<button>good</button>
+			</div>
+		</button>
+		<form>
+			<button disabled id="submit" type="submit">Submit</button>
+		</form>
+	</div>
+	</div>
+</body>
+</html>
+
+
+<!--
+	Event Propagation:
+	pro:freedom to register event listener on any element , we need only one event listener on the common ancestor
+-->
